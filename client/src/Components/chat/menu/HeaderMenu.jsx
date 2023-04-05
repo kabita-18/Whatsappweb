@@ -9,7 +9,7 @@ const MenuOption= styled(MenuItem)`
     color:#4A4A4A;
 `
 
-const HeaderMenu = () => {
+const HeaderMenu = ({setopenDrawer}) => {
 
     const [open, setOpen]=useState(null);
 
@@ -40,9 +40,8 @@ const HeaderMenu = () => {
 
         }}
       >
-        <MenuOption onClick={handleClose}>Profile</MenuOption>
-        <MenuOption onClick={handleClose}>My account</MenuOption>
-        <MenuOption onClick={handleClose}>Logout</MenuOption>
+        <MenuOption onClick = {() => {handleClose(); setopenDrawer(true);}}>Profile</MenuOption>
+        
       </Menu>
     </>
   );
