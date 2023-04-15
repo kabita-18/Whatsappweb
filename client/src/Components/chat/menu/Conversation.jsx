@@ -1,7 +1,10 @@
 
 import styled from '@emotion/styled';
 import { Box, Typography } from '@mui/material';
+import { useContext } from 'react';
 import React from 'react';
+import { AccountContext } from '../../../context/AccountProvider';
+import { setConversation } from '../../../service/Api';
 
 const Component = styled(Box)`
     display:flex;
@@ -20,8 +23,15 @@ const Image = styled('img')({
 
 
 const Conversation = ({user}) => {
+
+    const {setPerson, account} = useContext(AccountContext);
+
+    const getUser = async() =>{
+        setPerson(user);
+        await setConversation({senserId: account.sub, receiverId: user.sub})
+    }
     return (
-        <Component>
+        <Component onClick = {() => getUser()}>
             <Box>
                 <Image src = {user.picture} alt = "dp" />
             </Box>

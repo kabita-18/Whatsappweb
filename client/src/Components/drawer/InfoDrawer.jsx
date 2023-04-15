@@ -44,7 +44,7 @@ const InfoDrawer =({open, setOpen}) => {
     return (
         <Drawer
         open={open}
-        onclose ={handleClose}
+        onClose ={handleClose}
         PaperProps={{sx:drawerStyle}}
         style={{zIndex:1500}}
        

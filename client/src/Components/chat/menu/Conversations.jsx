@@ -19,7 +19,7 @@ const StyledDivider = styled(Divider)`
     background-color: #e9edef;
     opacity:0.6;
 `
-const Conversations = () => {
+const Conversations = ({text}) => {
 
     const [users, setUsers] = useState([]);
 
@@ -28,20 +28,21 @@ const Conversations = () => {
     useEffect(() => {
         const fetchDAta = async() => {
             let response = await getUsers();
-            setUsers(response);
+            const filteredData = response.filter(user => user.name.toLowerCase().includes(text.toLowerCase()));
+            setUsers(filteredData);
         }
         fetchDAta();
-    }, [])
+    }, [text])
     return (
         <Component>
             {
                 users.map((user, index) => (
                     user.sub !== account.sub &&
-                    <>
+                    <React.Fragment key={index}>
                     
-                     <Conversation key={index} user= {user}/>
+                     <Conversation  user= {user}/>
                      <StyledDivider/>
-                     </>
+                     </React.Fragment>
                 ))
             }
         </Component>
