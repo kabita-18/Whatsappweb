@@ -28,7 +28,7 @@ const Conversation = ({user}) => {
 
     const getUser = async() =>{
         setPerson(user);
-        await setConversation({senserId: account.sub, receiverId: user.sub})
+        await setConversation({senderId: account.sub, receiverId: user.sub})
     }
     return (
         <Component onClick = {() => getUser()}>
