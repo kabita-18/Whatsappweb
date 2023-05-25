@@ -22,21 +22,40 @@ const Container = styled(Box)`
 const Messages = ({person, conversation}) => {
     const [value, setValue] = useState('');
     const [messages, setMessages] = useState([]);
-    const [newMessageFlag, setMessageFlag] = useState(false);
-    const {account} = useContext(AccountContext);
+    
+    const {account, socket, newMessageFlag, setMessageFlag} = useContext(AccountContext);
     const [file, setFile] = useState();
     const [image, setImage] = useState('');
+    const [incomingMessage, setIncomingMessage] = useState(null);
 
     const scrollRef = useRef();
 
+    useEffect (() =>{
+        socket.current.on('getMessage', data => {
+            setIncomingMessage({
+                ...data,
+                createdAt: Date.now()
+            })
+
+        })
+    }, [])
+
+    useEffect(() =>{
+        incomingMessage && conversation?.members?.includes(incomingMessage.senderId)&& setMessages((prev) => [...prev, incomingMessage])
+    },[incomingMessage, conversation]);
+
+    const receiverId = conversation?.members?.find(member => member !== account.sub);
+
     useEffect(() => {
         const getMessageDetails = async () =>{
-           let data=  await getMessages(conversation._id)
+
+           let data=  await getMessages(conversation?._id)
            setMessages(data);
         }
-        conversation._id && getMessageDetails();
-    }, [person._id, conversation._id , newMessageFlag]);
+         getMessageDetails();
+    }, [person._id, conversation?._id , newMessageFlag]);
 
+    // [person._id, conversation._id , newMessageFlag]
     useEffect (() => {
         scrollRef.current?.scrollIntoView({transition: 'smooth'})
     }, [messages])
@@ -50,7 +69,7 @@ const Messages = ({person, conversation}) => {
             if(!file){
                     message = {
                     senderId: account.sub,
-                    receiverId: person.sub,
+                    receiverId: receiverId,
                     conversationId: conversation._id,
                     type: 'text',
                     text: value
@@ -67,6 +86,9 @@ const Messages = ({person, conversation}) => {
                 }
 
             }
+
+            socket.current.emit('sendMessage', message)
+
             // console.log(message);
             await newMessage (message);
             setValue('');

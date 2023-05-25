@@ -1,10 +1,12 @@
 
 import styled from '@emotion/styled';
 import { Box, Typography } from '@mui/material';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import React from 'react';
 import { AccountContext } from '../../../context/AccountProvider';
-import { setConversation } from '../../../service/Api';
+import { setConversation, getConversation } from '../../../service/Api';
+import { formatDate } from '../../../util/common-utils';
+import { emptyProfilePicture } from '../../../constants/data';
 
 const Component = styled(Box)`
     display:flex;
@@ -18,13 +20,48 @@ const Image = styled('img')({
     height: 50,
     borderRadius:'50%',
     padding: '0 14px',
+    
 
-})
+});
+const Container = styled(Box)`
+    display:flex;
+`;
+const Timestamp = styled(Typography)`
+    font-size : 12px;
+    margin-left: auto;
+    color: #00000099;
+    margin-right: 20px;
+`;
+const Text = styled(Typography)`
+    font-size : 14px;
+    display: block
+    color: rgb(0, 0, 0, 0.9);
+    
+`;
+const ProfileNameText = styled(Typography)`
+    font-weight: 500;
+    color: #000;
+
+`
+
 
 
 const Conversation = ({user}) => {
 
-    const {setPerson, account} = useContext(AccountContext);
+    // const url = user.picture || emptyProfilePicture;
+
+    const {setPerson, account, newMessageFlag} = useContext(AccountContext);
+
+    const [message, setMessage] = useState({});
+
+    useEffect(() => {
+        const getConversationDetails = async () => {
+            const data = await getConversation({ senderId: account.sub, receiverId: user.sub});
+            setMessage ({text: data?.message, timestamp: data?.updatedAt})
+
+        }
+        getConversationDetails();
+    }, [newMessageFlag])
 
     const getUser = async() =>{
         setPerson(user);
@@ -35,9 +72,21 @@ const Conversation = ({user}) => {
             <Box>
                 <Image src = {user.picture} alt = "dp" />
             </Box>
-            <Box>
-                <Typography>{user.name}</Typography>
+            <Box style = {{width: '100%'}}>
+                <Container>
+                    
+                    <ProfileNameText>{user.name}</ProfileNameText>
+                    {
+                    message?.text && 
+                        <Timestamp>{formatDate(message?.timestamp)}
+                        </Timestamp>
+                    }
+                    
+                </Container>
+                    <Text> { message?.text?.includes('localhost')?'media' : message.text}</Text>
+                
             </Box>
+            
         </Component>
     );
 }
