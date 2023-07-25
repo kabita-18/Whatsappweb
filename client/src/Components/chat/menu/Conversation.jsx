@@ -51,9 +51,13 @@ const Conversation = ({user}) => {
     // const url = user.picture || emptyProfilePicture;
 
     const {setPerson, account, newMessageFlag} = useContext(AccountContext);
-
+    const [pic, setPic] = useState("");
+    
     const [message, setMessage] = useState({});
 
+    useEffect(()=>{
+        setPic(user.picture)
+    }, [user.picture])
     useEffect(() => {
         const getConversationDetails = async () => {
             const data = await getConversation({ senderId: account.sub, receiverId: user.sub});
@@ -70,7 +74,7 @@ const Conversation = ({user}) => {
     return (
         <Component onClick = {() => getUser()}>
             <Box>
-                <Image src = {user.picture} alt = "dp" />
+                <Image src = {pic} alt = "dp" />
             </Box>
             <Box style = {{width: '100%'}}>
                 <Container>
