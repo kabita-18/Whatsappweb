@@ -14,7 +14,7 @@ const AccountProvider = ({children}) => {
 
     useEffect(() => {
       // socket.current = io('ws://localhost:9000')
-      socket.current = io('ws://https://whatsappweb-socket.vercel.app')
+      socket.current = io('ws://whatsappweb-socket.vercel.app')
     }, [])
   return (
     
