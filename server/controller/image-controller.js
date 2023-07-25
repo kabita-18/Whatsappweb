@@ -1,7 +1,8 @@
 import grid from 'gridfs-stream';
 import mongoose from 'mongoose';
 
-const url = "http://localhost:8000";
+// const url = "http://localhost:8000";
+const url = "https://whatsappweb-server.vercel.app/";
 
 let gfs, gridFsBucket;
 const conn = mongoose.connection;
