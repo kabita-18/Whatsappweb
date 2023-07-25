@@ -2,7 +2,9 @@ import {Server} from "socket.io";
 
 const io = new Server(9000,{
     cors:{
-        origin:'https://whatsappweb-five.vercel.app/'
+        origin:'https://whatsappweb-five.vercel.app',
+        methods: ["GET", "POST"]
+
     }
 })
 
