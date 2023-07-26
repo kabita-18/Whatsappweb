@@ -16,8 +16,6 @@ app.use(express.json());
 
 app.use('/', Route)
 
-;
-
 // create server
 const PORT = 8000;
 Connection().then(()=>{
